@@ -1,0 +1,29 @@
+<!-- 定义导航栏 -->
+{% extends 'base.html' %}
+{% block details %}
+
+<div class="container">
+  <h2>客户信息修改</h2>
+  <form action="/bmanage/cusfod/" method="post">
+      {% csrf_token %}
+      <div class="form-group">
+          <label for="ID">ID:</label>
+          <em style="color: red;">*</em>
+          <select class="form-control" id="cusID" name="cusID" required="required">
+          {% for obj in cus_list %}
+            <option value="{{ obj.cusid }}">{{ obj.cusid }}</option>
+          {% endfor %}
+          </select>
+      </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+    {% if messages %}
+        <script>
+            {% for msg in messages %}
+                alert('{{ msg.message }}');
+            {% endfor %}
+        </script>
+    {% endif %}
+</div>
+
+{% endblock %}

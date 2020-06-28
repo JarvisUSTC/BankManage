@@ -1,0 +1,261 @@
+{% extends 'base.html' %}
+<style type="text/css">
+.myTable-container {
+	width: 800px;
+	height: 430px;
+}
+</style>
+{% block details %}
+    <form action="" method="post">
+        {% csrf_token %}
+          <label for="Bank">Bank:</label>
+              <em style="color: red;">*</em>
+        <select class="form-control" id="bank" name="bank" required="required">
+          {% for bank in bank_list %}
+            <option value="{{ bank.bankname }}" >{{ bank.bankname }}</option>
+          {% endfor %}
+        </select>
+        <div class="form-group">
+          <label for="Year">Year:</label>
+              <em style="color: red;">*</em>
+          <input type="number" step="1" class="form-control" id="y" name="year" required="required" value="2020">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div class="container" style="padding-top: 5%; padding-left: 10%">
+		<!-- Nav tabs -->
+          <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" data-toggle="tab" href="#month">Month</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="tab" href="#season">Season</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="tab" href="#year">Year</a>
+            </li>
+          </ul>
+
+        <!-- Tab panes -->
+          <div class="tab-content" id="myTable-container">
+            <div id="month" class="container tab-pane active"><br>
+              <div id="tab1-container" class="myTable-container" style="width: 800px;height:430px;"></div>
+                <table class="table table-striped">
+                  <thead>
+                     <th>Time</th>
+                     <th>Total Amount of Business</th>
+                  </thead>
+                  <tbody>
+                    {% for key,value in zip_month_money %}
+                     <tr>
+                        <td>{{ key }}</td>
+                        <td>{{ value }}</td>
+                     </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+                <div id="tab4-container" class="myTable-container" style="width: 800px;height:430px;"></div>
+                <table class="table table-striped">
+                  <thead>
+                     <th>Time</th>
+                     <th>Total Amount of Customer</th>
+                  </thead>
+                  <tbody>
+                    {% for key,value in zip_month_customer %}
+                     <tr>
+                        <td>{{ key }}</td>
+                        <td>{{ value }}</td>
+                     </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+            </div>
+            <div id="season" class="container tab-pane fade"><br>
+              <div id="tab2-container" class="myTable-container" style="width: 800px;height:430px;"></div>
+                <table class="table table-striped">
+                  <thead>
+                     <th>Time</th>
+                     <th>Total Amount of Business</th>
+                  </thead>
+                  <tbody>
+                    {% for key,value in zip_season_money %}
+                     <tr>
+                        <td>{{ key }}</td>
+                        <td>{{ value }}</td>
+                     </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+                <div id="tab5-container" class="myTable-container" style="width: 800px;height:430px;"></div>
+                <table class="table table-striped">
+                  <thead>
+                     <th>Time</th>
+                     <th>Total Amount of Customer</th>
+                  </thead>
+                  <tbody>
+                    {% for key,value in zip_season_customer %}
+                     <tr>
+                        <td>{{ key }}</td>
+                        <td>{{ value }}</td>
+                     </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+            </div>
+            <div id="year" class="container tab-pane fade"><br>
+              <div id="tab3-container" class="myTable-container" style="width: 800px;height:430px;"></div>
+                <table class="table table-striped">
+                  <thead>
+                     <th>Bank</th>
+                     <th>Total Amount of Business</th>
+                  </thead>
+                  <tbody>
+                    {% for key,value in zip_year_money %}
+                     <tr>
+                        <td>{{ key }}</td>
+                        <td>{{ value }}</td>
+                     </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+                <div id="tab6-container" class="myTable-container" style="width: 800px;height:430px;"></div>
+                <table class="table table-striped">
+                  <thead>
+                     <th>Bank</th>
+                     <th>Total Amount of Customer</th>
+                  </thead>
+                  <tbody>
+                    {% for key,value in zip_year_customer %}
+                     <tr>
+                        <td>{{ key }}</td>
+                        <td>{{ value }}</td>
+                     </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+            </div>
+          </div>
+	</div>
+	<script>
+		var $tab1 = document.getElementById('tab1-container');
+		var $tab2 = document.getElementById('tab2-container');
+		var $tab3 = document.getElementById('tab3-container');
+		var $tab4 = document.getElementById('tab4-container');
+		var $tab5 = document.getElementById('tab5-container');
+		var $tab6 = document.getElementById('tab6-container');
+		let months = {{ months|safe }};
+        let month_money = {{ month_money }};
+        let season_money = {{ season_money }};
+        let bank_money_year = {{ bank_money_year|safe }};
+        let bank_names = {{ bank_names|safe }};
+        let month_customer = {{ month_customer | safe }};
+        let season_customer = {{ season_customer | safe }};
+        let bank_customer_year = {{ bank_customer_year | safe }};
+		/* 折线图 */
+		var tab1Option = {
+			xAxis : {
+				type : 'category',
+				data : months
+			},
+			yAxis : {
+			    name : 'The total amount of business',
+				type : 'value'
+			},
+			series : [ {
+				data : month_money,
+				type : 'line'
+			} ]
+		};
+
+		var tab4Option = {
+			xAxis : {
+				type : 'category',
+				data : [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec' ]
+			},
+			yAxis : {
+			    name : 'The total amount of customers',
+				type : 'value'
+			},
+			series : [ {
+				data : month_customer,
+				type : 'line'
+			} ]
+		};
+
+		var tab2Option = {
+			xAxis : {
+				type : 'category',
+				data : [ 'Spring', 'Summer', 'Autumn', 'Winter']
+			},
+			yAxis : {
+			    name : 'The total amount of business',
+				type : 'value'
+			},
+			series : [ {
+				data : season_money,
+				type : 'line'
+			} ]
+		};
+
+		var tab5Option = {
+			xAxis : {
+				type : 'category',
+				data : [ 'Spring', 'Summer', 'Autumn', 'Winter']
+			},
+			yAxis : {
+			    name : 'The total amount of customers',
+				type : 'value'
+			},
+			series : [ {
+				data : season_customer,
+				type : 'line'
+			} ]
+		};
+
+		var tab3Option = {
+			xAxis : {
+				type : 'category',
+				data : bank_names
+			},
+			yAxis : {
+			    name : 'The total amount of business',
+				type : 'value'
+			},
+			series : [ {
+				data : bank_money_year,
+				type : 'line'
+			} ]
+		};
+
+		var tab6Option = {
+			xAxis : {
+				type : 'category',
+				data : bank_names
+			},
+			yAxis : {
+			    name : 'The total amount of customers',
+				type : 'value'
+			},
+			series : [ {
+				data : bank_customer_year,
+				type : 'line'
+			} ]
+		};
+
+		/* 初始化tab1的 */
+		var tab1Table = echarts.init($tab1);
+		tab1Table.setOption(tab1Option);
+        var tab2Table = echarts.init($tab2);
+        tab2Table.setOption(tab2Option);
+        var tab3Table = echarts.init($tab3);
+        tab3Table.setOption(tab3Option);
+        var tab4Table = echarts.init($tab4);
+		tab4Table.setOption(tab4Option);
+        var tab5Table = echarts.init($tab5);
+        tab5Table.setOption(tab5Option);
+        var tab6Table = echarts.init($tab6);
+        tab6Table.setOption(tab6Option);
+
+	</script>
+{% endblock %}

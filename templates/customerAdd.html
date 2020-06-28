@@ -1,0 +1,76 @@
+<!-- 定义导航栏 -->
+{% extends 'base.html' %}
+{% block details %}
+
+<div class="container">
+  <h2>客户信息添加</h2>
+  <form action="" method="post">
+      {% csrf_token %}
+      <div class="form-group">
+      <label for="ID">ID:</label>
+          <em style="color: red;">*</em>
+      <input type="text" class="form-control" id="cusID" name="cusID" required="required" placeholder="Enter ID">
+    </div>
+      <div class="form-group">
+      <label for="name">Name:</label>
+          <em style="color: red;">*</em>
+      <input type="text" class="form-control" id="cusName" name="cusName" required="required" placeholder="Enter Name">
+    </div>
+      <div class="form-group">
+      <label for="phone">Phone Number:</label>
+          <em style="color: red;">*</em>
+      <input type="text" class="form-control" id="cusPhone" name="cusPhone" required="required" placeholder="Enter Phone Number">
+    </div>
+      <div class="form-group">
+      <label for="address">Address:</label>
+      <input type="text" class="form-control" id="cusAddress" name="address" placeholder="Enter Address">
+    </div>
+      <div class="form-group">
+      <label for="contact_name">Contact Name:</label>
+          <em style="color: red;">*</em>
+      <input type="text" class="form-control" id="ContactName" name="contactName" required="required" placeholder="Enter Contact Name">
+    </div>
+      <div class="form-group">
+      <label for="contact_phone">Phone Number:</label>
+          <em style="color: red;">*</em>
+      <input type="text" class="form-control" id="ContactPhone" name="contactPhone" required="required" placeholder="Enter Contact Phone Number">
+    </div>
+    <div class="form-group">
+      <label for="contact_email">Email:</label>
+      <input type="email" class="form-control" id="ContactEmail" name="contactEmail" placeholder="Enter Contact Email">
+    </div>
+      <div class="form-group">
+      <label for="relation">Contact Relationship:</label>
+          <em style="color: red;">*</em>
+      <input type="text" class="form-control" id="relation" name="relation" required="required" placeholder="Enter Relationship">
+    </div>
+    <div class="form-group">
+      <label for="loan_res">Loan responder:</label>
+        <em style="color: red;">*</em>
+      <select class="form-control" id="loan_res" name="loanRes" required="required">
+          {% for res in res_list %}
+            <option value="{{ res.empid }}">{{ res.empid }}</option>
+          {% endfor %}
+      </select>
+    </div>
+      <div class="form-group">
+      <label for="acc_res">Account responder:</label>
+      <em style="color: red;">*</em>
+      <select class="form-control" id="acc_res" name="accRes" required="required">
+          {% for res in res_list %}
+            <option value="{{ res.empid }}">{{ res.empid }}</option>
+          {% endfor %}
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+    {% if messages %}
+        <script>
+            {% for msg in messages %}
+                alert('{{ msg.message }}');
+            {% endfor %}
+        </script>
+    {% endif %}
+</div>
+
+{% endblock %}

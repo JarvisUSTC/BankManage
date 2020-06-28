@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>银行信息管理系统</title>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="../static/echarts.min.js"></script>
+</head>
+
+<body>
+
+<div class="jumbotron text-center" style="margin-bottom:0">
+  <h1>银行信息管理系统</h1>
+</div>
+
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark" role="navigation">
+  <a class="navbar-brand" href="#">信息管理</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="collapsibleNavbar">
+    <ul class="nav navbar-nav">
+      <li class="dropdown open">
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">客户管理<b class="caret"></b></a>
+        <ul class="dropdown-menu" role="menu" >
+            <li><a class="dropdown-item" href="{% url "bmanage:cusadd" %}" style="color: black;">客户信息添加</a></li>
+            <li class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url "bmanage:cusdel" %}" style="color: black;">客户信息删除</a></li>
+            <li class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url "bmanage:cusmod" %}" style="color: black;">客户信息修改</a></li>
+            <li class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url "bmanage:cusfod" %}" style="color: black;">客户信息查询</a></li>
+        </ul>
+      </li>
+      <li class="dropdown open">
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">账户管理<b class="caret"></b></a>
+        <ul class="dropdown-menu" role="menu" >
+            <li><a class="dropdown-item" href="{% url "bmanage:accadd" %}" style="color: black;">账户开户</a></li>
+            <li class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url "bmanage:accdel" %}" style="color: black;">账户销户</a></li>
+            <li class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url "bmanage:accmod" %}" style="color: black;">账户修改</a></li>
+            <li class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url "bmanage:accfod" %}" style="color: black;">账户查询</a></li>
+{#            <li class="dropdown-divider"></li>#}
+{#            <li><a class="dropdown-item" href="#" style="color: black;">支票账户开户</a></li>#}
+{#            <li class="dropdown-divider"></li>#}
+{#            <li><a class="dropdown-item" href="#" style="color: black;">支票账户销户</a></li>#}
+{#            <li class="dropdown-divider"></li>#}
+{#            <li><a class="dropdown-item" href="#" style="color: black;">支票账户修改</a></li>#}
+{#            <li class="dropdown-divider"></li>#}
+{#            <li><a class="dropdown-item" href="#" style="color: black;">支票账户查询</a></li>#}
+        </ul>
+      </li>
+      <li class="dropdown open">
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">贷款管理<b class="caret"></b></a>
+        <ul class="dropdown-menu" role="menu" >
+            <li><a class="dropdown-item" href="{% url "bmanage:loanadd" %}" style="color: black;">贷款信息添加</a></li>
+            <li class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url "bmanage:loandel" %}" style="color: black;">贷款信息删除</a></li>
+            <li class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url "bmanage:loanfound" %}" style="color: black;">贷款信息查询</a></li>
+            <li class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url "bmanage:loanissue" %}" style="color: black;">贷款发放</a></li>
+        </ul>
+      </li>
+      <li class="dropdown open">
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">业务统计<b class="caret"></b></a>
+        <ul class="dropdown-menu" role="menu" >
+            <li><a class="dropdown-item" href="{% url "bmanage:savestatistic" %}" style="color: black;">储蓄业务</a></li>
+            <li class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url "bmanage:loanstatistic" %}" style="color: black;">贷款业务</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row-fluid">
+
+        <div class="col-md-9">
+
+            <div id="doc">
+
+                {% block details %}
+                {% endblock %}
+
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="footer shadow py-3 py-md-4 border-top">
+      <div class="container px-sm-0">
+        <p class="text-muted my-0">
+        <a href="https://github.com/JarvisUSTC">Bank System</a>, Copyright &copy; 2020-2020 <a href="https://github.com/JarvisUSTC">JarvisUSTC</a>
+        </p>
+      </div>
+</footer>
+</body>
+</html>

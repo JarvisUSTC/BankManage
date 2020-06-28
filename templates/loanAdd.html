@@ -1,0 +1,52 @@
+<!-- 定义导航栏 -->
+{% extends 'base.html' %}
+{% block details %}
+
+<div class="container">
+  <h2>贷款信息添加</h2>
+  <form action="" method="post">
+      {% csrf_token %}
+      <div class="form-group">
+      <label for="loanID">Loan ID:</label>
+          <em style="color: red;">*</em>
+      <input type="text" class="form-control" id="loanID" name="loanID" required="required" placeholder="Enter Loan ID">
+    </div>
+    <div class="form-group">
+        <label for="cusID">Customer ID:</label>
+        <em style="color: red;">*</em>
+    </div>
+      <select multiple class="form-control" id="cusID" name="cusIDList" required="required">
+          {% for obj in obj_list %}
+            <option value="{{ obj.cusid }}">{{ obj.cusid }}</option>
+          {% endfor %}
+      </select>
+{#      <div class="form-group">#}
+{#      <label for="ID">ID:</label>#}
+{#          <em style="color: red;">*</em>#}
+{#      <input type="text" class="form-control" id="cusID" name="cusID" required="required" placeholder="Enter ID">#}
+{#    </div>#}
+      <div class="form-group">
+      <label for="bank">Bank Name:</label>
+    </div>
+      <select class="form-control" id="bank" name="bank" required="required">
+          {% for bank in bank_list %}
+            <option value="{{ bank.bankname }}">{{ bank.bankname }}</option>
+          {% endfor %}
+      </select>
+      <div class="form-group">
+      <label for="money">Money:</label>
+          <em style="color: red;">*</em>
+      <input type="number" step="0.01" class="form-control" id="Money" name="money" required="required" placeholder="Enter Money">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+    {% if messages %}
+        <script>
+            {% for msg in messages %}
+                alert('{{ msg.message }}');
+            {% endfor %}
+        </script>
+    {% endif %}
+</div>
+
+{% endblock %}

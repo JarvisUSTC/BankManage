@@ -1,0 +1,29 @@
+<!-- 定义导航栏 -->
+{% extends 'base.html' %}
+{% block details %}
+
+<div class="container">
+  <h2>账户信息修改</h2>
+  <form action="/bmanage/accfod/" method="post">
+      {% csrf_token %}
+      <div class="form-group">
+      <label for="accID">Account ID:</label>
+          <em style="color: red;">*</em>
+          <select class="form-control" id="sel1" name="accID">
+              {% for accID in accID_list %}
+                  <option value="{{ accID.accountid }}">{{ accID.accountid }}</option>
+              {% endfor %}
+          </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+    {% if messages %}
+        <script>
+            {% for msg in messages %}
+                alert('{{ msg.message }}');
+            {% endfor %}
+        </script>
+    {% endif %}
+</div>
+
+{% endblock %}

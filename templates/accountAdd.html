@@ -1,0 +1,88 @@
+<!-- 定义导航栏 -->
+{% extends 'base.html' %}
+{% block details %}
+
+<div class="container">
+  <h2>账户开户</h2>
+  <form action="" method="post">
+      {% csrf_token %}
+      <div class="form-group">
+      <label for="accountID">Account ID:</label>
+          <em style="color: red;">*</em>
+      <input type="text" class="form-control" id="accID" name="accID" required="required" placeholder="Enter Account ID">
+    </div>
+    <div class="form-group">
+        <label for="cusID">Customer ID:</label>
+        <em style="color: red;">*</em>
+    </div>
+      <select multiple class="form-control" id="cusID" name="cusIDList" required="required">
+          {% for obj in obj_list %}
+            <option value="{{ obj.cusid }}">{{ obj.cusid }}</option>
+          {% endfor %}
+      </select>
+{#      <div class="form-group">#}
+{#      <label for="ID">ID:</label>#}
+{#          <em style="color: red;">*</em>#}
+{#      <input type="text" class="form-control" id="cusID" name="cusID" required="required" placeholder="Enter ID">#}
+{#    </div>#}
+      <div class="form-group">
+      <label for="bank">Bank Name:</label>
+    </div>
+      <select class="form-control" id="bank" name="bank" required="required">
+          {% for bank in bank_list %}
+            <option value="{{ bank.bankname }}">{{ bank.bankname }}</option>
+          {% endfor %}
+      </select>
+      <div class="form-group">
+      <label for="settime">Datetime:</label>
+      <input type="datetime-local" class="form-control" id="settime" name="settime"  placeholder="Enter Datetime">
+    </div>
+      <div class="form-group">
+      <label for="money">Money:</label>
+          <em style="color: red;">*</em>
+      <input type="number" step="0.01" class="form-control" id="Money" name="money" required="required" placeholder="Enter Money">
+    </div>
+      <select name="accType" id="accountType" onchange="show_or_hide(this.value)">
+        <option value="SavingAccount">Save Account</option>
+        <option value="CheckingAccount">Check Account</option>
+    </select>
+      <div class="saveAcc">
+          <div class="form-group" type="hidden">
+              <label for="interestrate">Interestrate:</label>
+              <input type="number" step="0.01" class="form-control" id="interestrate" name="interestrate" placeholder="Enter Interestrate">
+          </div>
+          <div class="form-group" type="hidden">
+              <label for="savetype">Savetype:</label>
+              <input type="text" class="form-control" id="savetype" name="savetype" placeholder="Enter savetype">
+          </div>
+      </div>
+      <div class="checkAcc">
+          <div class="form-group" type="hidden">
+              <label for="overdraft">Overdraft:</label>
+              <input type="number" class="form-control" id="overdraft" name="overdraft" placeholder="Enter Overdraft">
+          </div>
+      </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+      <script>
+          $(".checkAcc").hide();
+          function show_or_hide(v){
+	    	if(v == "SavingAccount"){
+	    		$(".saveAcc").show();
+	    		$(".checkAcc").hide();
+	    	}else if(v =="CheckingAccount"){
+	    		$(".saveAcc").hide();
+	    		$(".checkAcc").show();
+	    	}
+	    }
+      </script>
+  </form>
+    {% if messages %}
+        <script>
+            {% for msg in messages %}
+                alert('{{ msg.message }}');
+            {% endfor %}
+        </script>
+    {% endif %}
+</div>
+
+{% endblock %}

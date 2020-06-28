@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block details %}
+
+    <div class="container">
+  <h2>账户信息修改</h2>
+  <form action="/bmanage/accmod/" method="post">
+      {% csrf_token %}
+      <div class="form-group">
+      <label for="accountID">Account ID:</label>
+          <em style="color: red;">*</em>
+      <input type="text" class="form-control" id="accID" name="accID" required="required" placeholder="Enter Account ID" value="{{ acc_id }}" readonly>
+    </div>
+      <div class="form-group">
+      <label for="ID">ID:</label>
+          <em style="color: red;">*</em>
+          {% for cus_obj in cus_obj_list %}
+            <input type="text" class="form-control" id="cusID" name="cusID" required="required" value="{{ cus_obj.cusid.cusid }}" readonly>
+          {% endfor %}
+    </div>
+      <div class="form-group">
+      <label for="bank">Bank Name:</label>
+      <input type="text" class="form-control" id="bank" name="bank" placeholder="Enter Bank Name" value="{{ bank }}" readonly>
+    </div>
+      <div class="form-group">
+      <label for="settime">Datetime:</label>
+      <input type="text" class="form-control" id="settime" name="settime" placeholder="Enter Datetime" value="{{ acc_obj.settime }}" readonly>
+    </div>
+      <div class="form-group">
+      <label for="money">Money:</label>
+          <em style="color: red;">*</em>
+      <input type="number" step="0.01" class="form-control" id="Money" name="money" required="required" placeholder="Enter Money" value="{{ acc_obj.money }}">
+    </div>
+         <div class="form-group">
+             <input class="acctype" name="accType" value="{{ acc_type }}" readonly>
+         </div>
+      <div class="saveAcc">
+          <div class="form-group" type="hidden">
+              <label for="interestrate">Interestrate:</label>
+              <input type="number" step="0.01" class="form-control" id="interestrate" name="interestrate" placeholder="Enter Interestrate" value="{{ save_obj.interestrate }}">
+          </div>
+          <div class="form-group" type="hidden">
+              <label for="savetype">Savetype:</label>
+              <input type="text" class="form-control" id="savetype" name="savetype" placeholder="Enter savetype" value="{{ save_obj.savetype }}">
+          </div>
+      </div>
+      <div class="checkAcc">
+          <div class="form-group" type="hidden">
+              <label for="overdraft">Overdraft:</label>
+              <input type="number" class="form-control" id="overdraft" name="overdraft" placeholder="Enter Overdraft" value="{{ check_obj.overdraft }}">
+          </div>
+      </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+    {% if acc_type == "SavingAccount" %}
+        <script>
+            $(".saveAcc").show();
+            $(".checkAcc").hide();
+        </script>
+    {% elif acc_type == "CheckingAccount" %}
+        <script>
+            $(".saveAcc").hide();
+            $(".checkAcc").show();
+        </script>
+    {% endif %}
+    {% if messages %}
+        <script>
+            {% for msg in messages %}
+                alert('{{ msg.message }}');
+            {% endfor %}
+        </script>
+    {% endif %}
+</div>
+{% endblock %}

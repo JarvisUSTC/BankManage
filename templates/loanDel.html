@@ -1,0 +1,29 @@
+<!-- 定义导航栏 -->
+{% extends 'base.html' %}
+{% block details %}
+
+<div class="container">
+  <h2>贷款信息删除</h2>
+  <form action="" method="post">
+      {% csrf_token %}
+      <div class="form-group">
+      <label for="loanID">Loan ID:</label>
+          <em style="color: red;">*</em>
+          <select class="form-control" id="sel1" name="loanID">
+              {% for loanID in loanID_list %}
+                  <option value="{{ loanID.loanid }}">{{ loanID.loanid }}</option>
+              {% endfor %}
+          </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+    {% if messages %}
+        <script>
+            {% for msg in messages %}
+                alert('{{ msg.message }}');
+            {% endfor %}
+        </script>
+    {% endif %}
+</div>
+
+{% endblock %}
