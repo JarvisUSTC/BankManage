@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.db.models import Count
+from django.db.utils import IntegrityError
 # 导入 HttpResponse 模块
 from django.http import HttpResponse
 from .models import Customer, Cusforloan
@@ -123,10 +124,16 @@ def account_add(request):
             messages.success(request, 'This account id has existed')
             return render(request, 'accountAdd.html', locals())
         obj = Accounts.objects.create(accountid=acc_id, money=money, accounttype=acc_type, settime=settime)
+        try:
+            for cus_id in cus_id_list:
+                cus_obj = Customer.objects.filter(cusid=cus_id).first()
+                Cusforacc.objects.create(accountid=obj, bank=bank_obj, cusid=cus_obj, accounttype=acc_type)
+        except IntegrityError as e:
+            Cusforacc.objects.filter(accountid=acc_id).delete()
+            Accounts.objects.filter(accountid=acc_id).delete()
+            messages.error(request, str(e))
+            return render(request, 'accountAdd.html', locals())
         Bank.objects.filter(bankname=bank).update(money=float(bank_obj.money) + float(money))
-        for cus_id in cus_id_list:
-            cus_obj = Customer.objects.filter(cusid=cus_id).first()
-            Cusforacc.objects.create(accountid=obj, bank=bank_obj, cusid=cus_obj, accounttype=acc_type)
         if acc_type == "SavingAccount":
             interestrate = request.POST.get('interestrate')
             if len(interestrate) == 0:

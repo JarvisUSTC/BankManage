@@ -9,7 +9,7 @@
       <div class="form-group">
       <label for="accountID">Account ID:</label>
           <em style="color: red;">*</em>
-      <input type="text" class="form-control" id="accID" name="accID" required="required" placeholder="Enter Account ID">
+      <input type="text" class="form-control" id="accID" name="accID" maxlength="6" minlength="6" required="required" placeholder="Enter 6-digit Account ID">
     </div>
     <div class="form-group">
         <label for="cusID">Customer ID:</label>
@@ -79,7 +79,7 @@
     {% if messages %}
         <script>
             {% for msg in messages %}
-                alert('{{ msg.message }}');
+                alert('{{ msg.message | escapejs  }}');
             {% endfor %}
         </script>
     {% endif %}
