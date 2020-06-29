@@ -114,13 +114,12 @@ def account_add(request):
         cus_id_list = request.POST.getlist('cusIDList')
         bank = request.POST.get('bank')
         bank_obj = Bank.objects.filter(bankname=bank).first()
-        if len(bank) == 0:
-            bank = None
         settime = request.POST.get('settime')
         if Accounts.objects.filter(accountid=acc_id):
             messages.success(request, 'This account id has existed')
             return render(request, 'accountAdd.html', locals())
         obj = Accounts.objects.create(accountid=acc_id, money=money, accounttype=acc_type, settime=settime)
+        Bank.objects.filter(bankname=bank).update(money=float(bank_obj.money) + float(money))
         for cus_id in cus_id_list:
             cus_obj = Customer.objects.filter(cusid=cus_id).first()
             Cusforacc.objects.create(accountid=obj, bank=bank_obj, cusid=cus_obj, accounttype=acc_type)
@@ -147,6 +146,10 @@ def account_del(request):
         if not obj:
             messages.success(request, 'This account id doesn\'t exist')
             return render(request, 'accountDel.html')
+        bankname = Cusforacc.objects.filter(accountid=obj[0].accountid).first().bank.bankname
+        print(bankname)
+        Bank.objects.filter(bankname=bankname).update(money=float(Bank.objects.filter(bankname=bankname).first().money)
+                                                            - float(obj[0].money))
         acc_type = obj[0].accounttype
         if acc_type == "SavingAccount":
             Saveacc.objects.filter(accountid=obj[0].accountid).delete()
@@ -164,6 +167,10 @@ def account_mod(request):
         acc_id = request.POST.get("accID")
         acc_type = request.POST.get("accType")
         money = request.POST.get("money")
+        obj = Accounts.objects.filter(accountid=acc_id)
+        bankname = Cusforacc.objects.filter(accountid=obj[0].accountid).first().bank.bankname
+        bank_obj = Bank.objects.filter(bankname=bankname)
+        bank_obj.update(money=float(bank_obj.first().money) - float(obj[0].money) + float(money))
         Accounts.objects.filter(accountid=acc_id).update(money=money)
         if acc_type == "SavingAccount":
             interestrate = request.POST.get("interestrate")
@@ -265,6 +272,10 @@ def loan_issue(request):
                                    paytime=time_now.strftime("%Y-%m-%d %H:%M:%S"))
         except Exception as e:
             messages.error(request, '发放贷款金额超出应发金额')
+            return render(request, 'loanIssue.html', locals())
+        bankname = loan_obj.bank.bankname
+        Bank.objects.filter(bankname=bankname).update(money=float(Bank.objects.filter(bankname=bankname).first().money)
+                                                            - float(money))
     return render(request, 'loanIssue.html', locals())
 
 
@@ -281,26 +292,28 @@ def save_statistics(request):
         season_money = []
         season_customer = []
         for i in range(12):
-            start_date = datetime.date(year, i+1, 1)
-            end_date = datetime.date(year + int((i+1 - (i+1) % 12)/12), (i+1) % 12 + 1, 1)
+            start_date = datetime.date(year, i + 1, 1)
+            end_date = datetime.date(year + int((i + 1 - (i + 1) % 12) / 12), (i + 1) % 12 + 1, 1)
             m_queryset = SaveAccounts.objects.filter(bank=bank, settime__range=(start_date, end_date))
             money = 0
             customer = 0
             for q in m_queryset:
-                c = Cusforacc.objects.filter(accountid=q.accountid).aggregate(customer_num=Count('cusid', distinct=True))
+                c = Cusforacc.objects.filter(accountid=q.accountid).aggregate(
+                    customer_num=Count('cusid', distinct=True))
                 customer += c['customer_num']
                 money += q.money
             month_money.append(money)
             month_customer.append(customer)
         print(month_customer)
         for i in range(0, 4):
-            start_date = datetime.date(year, i*3+1, 1)
-            end_date = datetime.date(year + int(((i+1)*3 - ((i+1)*3) % 12)/12), ((i+1)*3) % 12 + 1, 1)
+            start_date = datetime.date(year, i * 3 + 1, 1)
+            end_date = datetime.date(year + int(((i + 1) * 3 - ((i + 1) * 3) % 12) / 12), ((i + 1) * 3) % 12 + 1, 1)
             m_queryset = SaveAccounts.objects.filter(bank=bank, settime__range=(start_date, end_date))
             money = 0
             customer = 0
             for q in m_queryset:
-                c = Cusforacc.objects.filter(accountid=q.accountid).aggregate(customer_num=Count('cusid', distinct=True))
+                c = Cusforacc.objects.filter(accountid=q.accountid).aggregate(
+                    customer_num=Count('cusid', distinct=True))
                 customer += c['customer_num']
                 money += q.money
             season_money.append(money)
