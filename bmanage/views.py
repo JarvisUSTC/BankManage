@@ -93,6 +93,10 @@ def customer_manage_mod(request):
 
 def customer_manage_found(request):
     cus_list = Customer.objects.all()
+    customer_list = []
+    for cus in cus_list:
+        cus_info = [cus.cusid, cus.cusname, cus.accres.empname, cus.loanres.empname, cus.contact_name]
+        customer_list.append(cus_info)
     if request.method == "POST":
         res_list = Employee.objects.all()
         cus_id = request.POST.get('cusID')
@@ -185,6 +189,15 @@ def account_mod(request):
 
 def account_found(request):
     accID_list = Accounts.objects.all()
+    account_list = []
+    for acc_obj in accID_list:
+        acc = [acc_obj.accountid]
+        bankname = Cusforacc.objects.filter(accountid=acc_obj.accountid).first().bank.bankname
+        acc.append(bankname)
+        acc.append(acc_obj.accounttype)
+        acc.append(acc_obj.money)
+        acc.append(acc_obj.settime)
+        account_list.append(acc)
     if request.method == "POST":
         time_now = timezone.now()  # 输出time_now即为当然日期和时间
         acc_id = request.POST.get('accID')
@@ -241,9 +254,31 @@ def loan_del(request):
 
 def loan_found(request):
     loanID_list = Loan.objects.all()
+    loan_list = []
+    for loan_obj in loanID_list:
+        loan_info = [loan_obj.loanid, loan_obj.bank.bankname, loan_obj.money]
+        pay_objs = Payinfo.objects.filter(loanid=loan_obj.loanid)
+        pay_money = 0
+        for pay_obj in pay_objs:
+            pay_money += float(pay_obj.money)
+        balance = float(loan_obj.money) - pay_money
+        loan_info.append(balance)
+        if loan_obj.state == '0':
+            state = "贷款未发放"
+        elif loan_obj.state == '1':
+            state = "贷款正在发放"
+        else:
+            state = "贷款发放完成"
+        loan_info.append(state)
+        loan_list.append(loan_info)
     if request.method == 'POST':
         load_id = request.POST.get('loanID')
         loan_obj = Loan.objects.filter(loanid=load_id).first()
+        pay_objs = Payinfo.objects.filter(loanid=load_id)
+        pay_money = 0
+        for pay_obj in pay_objs:
+            pay_money += float(pay_obj.money)
+        balance = float(loan_obj.money) - pay_money
         cus_obj_list = Cusforloan.objects.filter(loanid=load_id)
         state_loan = loan_obj.state
         if state_loan == '0':

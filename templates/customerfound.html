@@ -17,6 +17,36 @@
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
   </form>
+    <table class="table table-striped">
+        <thead>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Account Responder</th>
+        <th>Loan Responder</th>
+        <th>Contact Name</th>
+        </thead>
+        <tbody id="search-content">
+        {% for customer_info in customer_list %}
+            <tr>
+                <td>{{ customer_info.0 }}</td>
+                <td>{{ customer_info.1 }}</td>
+                <td>{{ customer_info.2 }}</td>
+                <td>{{ customer_info.3 }}</td>
+                <td>{{ customer_info.4 }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="card-footer text-white text-center">
+      <div>
+        <a class="btn btn-primary" href="#search-form" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="search-form"><i class="fa fas fa-search"></i> 搜索</a>
+      </div>
+      <div class="collapse" id="search-form">
+      <div class="form-group pt-3 mb-0">
+        <input id="search-input" type="text" class="form-control" placeholder="输入以开始搜索">
+      </div>
+      </div>
+    </div>
     {% if messages %}
         <script>
             {% for msg in messages %}

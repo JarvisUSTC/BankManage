@@ -37,15 +37,50 @@
           <input type="text" class="form-control" id="bank" name="bank" required="required" value="{{ loan_obj.bank.bankname }}" readonly>
     </div>
       <div class="form-group">
-      <label for="money">Money:</label>
+      <label for="money">Total Loan Amount:</label>
           <em style="color: red;">*</em>
       <input type="number" step="0.01" class="form-control" id="Money" name="money" required="required" value="{{ loan_obj.money }}" readonly>
+    </div>
+    <div class="form-group">
+      <label for="money">Balance:</label>
+          <em style="color: red;">*</em>
+      <input type="number" step="0.01" class="form-control" id="Money" name="money" required="required" value="{{ balance }}" readonly>
     </div>
      <div class="form-group">
       <label for="state">State:</label>
       <input type="text" class="form-control" id="state" name="state" required="required" value="{{ state }}" readonly>
     </div>
   </form>
+    <table class="table table-striped">
+        <thead>
+        <th>Loan ID</th>
+        <th>Bank</th>
+        <th>Total Loan Amount</th>
+        <th>Balance</th>
+        <th>State</th>
+        </thead>
+        <tbody id="search-content">
+        {% for loan_info in loan_list %}
+            <tr>
+                <td>{{ loan_info.0 }}</td>
+                <td>{{ loan_info.1 }}</td>
+                <td>{{ loan_info.2 }}</td>
+                <td>{{ loan_info.3 }}</td>
+                <td>{{ loan_info.4 }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="card-footer text-white text-center">
+      <div>
+        <a class="btn btn-primary" href="#search-form" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="search-form"><i class="fa fas fa-search"></i> 搜索</a>
+      </div>
+      <div class="collapse" id="search-form">
+      <div class="form-group pt-3 mb-0">
+        <input id="search-input" type="text" class="form-control" placeholder="输入以开始搜索">
+      </div>
+      </div>
+    </div>
     {% if messages %}
         <script>
             {% for msg in messages %}
